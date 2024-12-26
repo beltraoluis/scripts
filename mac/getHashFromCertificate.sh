@@ -13,8 +13,17 @@ get_certificate_hash() {
                     openssl dgst -sha256 -binary | \
                     openssl enc -base64)
 
-    # Exibe o certificado e o hash em hexadecimal e base64
+    # Obtém o fingerprint do certificado em SHA-1
+    sha1_fingerprint=$(openssl x509 -noout -fingerprint -sha1 -in "$1" | awk -F'=' '{print $2}' | tr -d ':')
+
+    # Obtém o fingerprint do certificado em SHA-256
+    sha256_fingerprint=$(openssl x509 -noout -fingerprint -sha256 -in "$1" | awk -F'=' '{print $2}' | tr -d ':')
+    
+    echo
     cat "$1"
+    echo
+    echo "Fingerprint SHA-1: $sha1_fingerprint"
+    echo "Fingerprint SHA-256: $sha256_fingerprint"
     echo "Hash em hex: $hex_hash"
     echo "Hash em b64: $base64_hash"
 }
